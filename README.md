@@ -26,6 +26,11 @@ mvn clean package
 2. Navigate to the main application class located in src/main/java/.
 3. Run the main class to start the Spring Boot application.
 
+### Running Unit Tests
+Use Maven to run JUnit Testcases
+```shell
+mvn test
+```
 
 ## Dependencies: 
 The following dependencies are used in this project:

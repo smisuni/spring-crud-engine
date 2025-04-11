@@ -1,5 +1,6 @@
 package com.springcrudengine.product_api.controller;
 
+import com.springcrudengine.product_api.exceptions.ProductNotFoundException;
 import com.springcrudengine.product_api.model.Product;
 import com.springcrudengine.product_api.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
 import java.util.List;
 import java.util.UUID;
 
@@ -36,8 +35,8 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable UUID id) {
         return productService.getProduct(id)
-                .map(ResponseEntity::ok) // 200 OK
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 
     @GetMapping
@@ -45,6 +44,7 @@ public class ProductController {
         List<Product> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable UUID id) {
         productService.deleteProduct(id);
