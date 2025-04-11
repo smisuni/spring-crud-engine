@@ -27,10 +27,11 @@ mvn clean package
 3. Run the main class to start the Spring Boot application.
 
 ### Running Unit Tests
-Use Maven to run JUnit Testcases
+Use Maven to perform unit testing and code coverage using JaCoCo.
 ```shell
-mvn test
+mvn clean install
 ```
+Code coverage reports are available at `target/site/jacoco/index.html`.
 
 ## Dependencies: 
 The following dependencies are used in this project:
