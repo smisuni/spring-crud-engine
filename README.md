@@ -37,3 +37,4 @@ Code coverage reports are available at `target/site/jacoco/index.html`.
 The following dependencies are used in this project:
 - Lombok: For reducing boilerplate code.
 - spring-boot-starter-web: For building web applications with Spring Boot.
+- jacoco-maven-plugin : For code coverage using JaCoCo.
