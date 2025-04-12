@@ -2,6 +2,7 @@ package com.springcrudengine.product_api.controller;
 
 import com.springcrudengine.product_api.dto.ProductDTO;
 import com.springcrudengine.product_api.exceptions.ProductNotFoundException;
+import com.springcrudengine.product_api.exceptions.BadRequestException;
 import com.springcrudengine.product_api.mapper.ProductMapper;
 import com.springcrudengine.product_api.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,23 @@ public class ProductController {
         this.productService = productService;
     }
 
+    private void validateProductDTO(ProductDTO productDTO) {
+        if (productDTO.getName() == null || productDTO.getName().trim().isEmpty() || productDTO.getName().length() < 3) {
+            throw new BadRequestException("Product name cannot be null, empty, or less than 3 characters");
+        }
+
+        if (productDTO.getPrice() == null || productDTO.getPrice() < 0) {
+            throw new BadRequestException("Price must be atleast 0");
+        }
+
+        if (productDTO.getAvailable() == null) {
+            throw new BadRequestException("Available status cannot be null");
+        }
+    }
+
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
+        validateProductDTO(productDTO);
         ProductDTO createdProductDTO = productService.createProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDTO);
     }
