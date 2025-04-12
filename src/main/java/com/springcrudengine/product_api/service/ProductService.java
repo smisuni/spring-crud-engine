@@ -1,42 +1,50 @@
 package com.springcrudengine.product_api.service;
 
+import com.springcrudengine.product_api.dto.ProductDTO;
+import com.springcrudengine.product_api.mapper.ProductMapper;
 import com.springcrudengine.product_api.model.Product;
 import org.springframework.stereotype.Service;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+/**
+ * Service layer for handling business logic related to products.
+ * Manages in-memory storage and data transformation between DTOs and entities.
+ */
 @Service
 public class ProductService {
-    private final Map<UUID, Product> productRepository = new ConcurrentHashMap<>();
 
-    public Product createProduct(Product product) {
+    private final Map<UUID, Product> productRepository = new ConcurrentHashMap<>();
+    private final ProductMapper mapper;
+
+    public ProductService(ProductMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    public ProductDTO createProduct(ProductDTO dto) {
+        Product product = mapper.toEntity(dto);
         product.setId(UUID.randomUUID());
         productRepository.put(product.getId(), product);
-        return product;
+        return mapper.toDto(product);
     }
 
-    public Optional<Product> getProduct(UUID id) {
-        return Optional.ofNullable(productRepository.get(id));
+    public Optional<ProductDTO> getProduct(UUID id) {
+        return Optional.ofNullable(productRepository.get(id))
+                .map(mapper::toDto);
     }
 
-    public List<Product> getAllProducts() {
-        return new ArrayList<>(productRepository.values());
+    public List<ProductDTO> getAllProducts() {
+        return mapper.toDto(new ArrayList<>(productRepository.values()));
     }
 
-    public Product updateProduct(UUID id, Product updatedProduct) {
-        if (productRepository.containsKey(id)) {
-            updatedProduct.setId(id);
-            productRepository.put(id, updatedProduct);
-            return updatedProduct;
+    public ProductDTO updateProduct(UUID id, ProductDTO dto) {
+        if (!productRepository.containsKey(id)) {
+            throw new RuntimeException("Product not found");
         }
-        throw new RuntimeException("Product not found");
+        Product product = mapper.toEntity(dto);
+        product.setId(id);
+        productRepository.put(id, product);
+        return mapper.toDto(product);
     }
 
     public void deleteProduct(UUID id) {

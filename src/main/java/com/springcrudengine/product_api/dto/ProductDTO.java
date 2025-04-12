@@ -1,14 +1,17 @@
-package com.springcrudengine.product_api.model;
+package com.springcrudengine.product_api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.UUID;
 
+/**
+ * DTO used for exposing product data via API.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class ProductDTO {
 
     private UUID id;
     private String name;

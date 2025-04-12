@@ -1,12 +1,12 @@
 package com.springcrudengine.product_api;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springcrudengine.product_api.controller.ProductController;
+import com.springcrudengine.product_api.dto.ProductDTO;
 import com.springcrudengine.product_api.exceptions.GlobalExceptionHandler;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import com.springcrudengine.product_api.model.Product;
+import com.springcrudengine.product_api.mapper.ProductMapper;
 import com.springcrudengine.product_api.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +32,9 @@ public class ProductControllerTest {
     @Mock
     private ProductService productService;
 
+    @Mock
+    private ProductMapper productMapper;
+
     @InjectMocks
     private ProductController productController;
 
@@ -48,17 +51,17 @@ public class ProductControllerTest {
 
     @Test
     void testCreateProduct() throws Exception {
-        Product request = new Product(null, "Mouse", "Wireless mouse", 20.0, true);
-        Product response = new Product(UUID.randomUUID(), "Mouse", "Wireless mouse", 20.0, true);
+        ProductDTO requestDTO = new ProductDTO(null, "Mouse", "Wireless mouse", 20.0, true);
+        ProductDTO responseDTO = new ProductDTO(UUID.randomUUID(), "Mouse", "Wireless mouse", 20.0, true);
 
         // Mock service layer behavior
-        Mockito.when(productService.createProduct(any(Product.class))).thenReturn(response);
+        Mockito.when(productService.createProduct(any(ProductDTO.class))).thenReturn(responseDTO);
 
        mockMvc.perform(post("/api/products")
                         .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(response.getId().toString()))
+                .andExpect(jsonPath("$.id").value(responseDTO.getId().toString()))
                 .andExpect(jsonPath("$.name").value("Mouse"));
     }
 
@@ -71,16 +74,16 @@ public class ProductControllerTest {
         when(productService.getProduct(nonExistingId)).thenReturn(java.util.Optional.empty());
 
         mockMvc.perform(get("/api/products/{id}", nonExistingId))
-                .andExpect(status().isNotFound())  // Expecting 404 status
-                .andExpect(content().string("Product not found"));  // Expecting the exception message
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Product not found"));
     }
 
     @Test
     void testGetProductById_Found() throws Exception {
         UUID id = UUID.randomUUID();
-        Product product = new Product(id, "Keyboard", "Mechanical keyboard", 50.0, true);
+        ProductDTO productDTO = new ProductDTO(id, "Keyboard", "Mechanical keyboard", 50.0, true);
 
-        Mockito.when(productService.getProduct(id)).thenReturn(Optional.of(product));
+        Mockito.when(productService.getProduct(id)).thenReturn(Optional.of(productDTO));
 
         mockMvc.perform(get("/api/products/" + id))
                 .andExpect(status().isOk())
@@ -91,12 +94,12 @@ public class ProductControllerTest {
 
     @Test
     void testGetAllProducts() throws Exception {
-        List<Product> products = Arrays.asList(
-                new Product(UUID.randomUUID(), "Item1", "Desc1", 100.0, true),
-                new Product(UUID.randomUUID(), "Item2", "Desc2", 200.0, false)
+        List<ProductDTO> productsDTO = Arrays.asList(
+                new ProductDTO(UUID.randomUUID(), "Item1", "Desc1", 100.0, true),
+                new ProductDTO(UUID.randomUUID(), "Item2", "Desc2", 200.0, false)
         );
 
-        Mockito.when(productService.getAllProducts()).thenReturn(products);
+        Mockito.when(productService.getAllProducts()).thenReturn(productsDTO);
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
@@ -117,14 +120,14 @@ public class ProductControllerTest {
     @Test
     void testUpdateProduct() throws Exception {
         UUID id = UUID.randomUUID();
-        Product request = new Product(null, "Updated", "Updated description", 75.0, false);
-        Product updated = new Product(id, "Updated", "Updated description", 75.0, false);
+        ProductDTO requestDTO = new ProductDTO(null, "Updated", "Updated description", 75.0, false);
+        ProductDTO updatedDTO = new ProductDTO(id, "Updated", "Updated description", 75.0, false);
 
-        Mockito.when(productService.updateProduct(eq(id), any(Product.class))).thenReturn(updated);
+        Mockito.when(productService.updateProduct(eq(id), any(ProductDTO.class))).thenReturn(updatedDTO);
 
         mockMvc.perform(put("/api/products/" + id)
                         .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id.toString()))
                 .andExpect(jsonPath("$.name").value("Updated"));

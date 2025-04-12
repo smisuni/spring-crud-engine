@@ -1,9 +1,11 @@
 package com.springcrudengine.product_api;
 
-import com.springcrudengine.product_api.model.Product;
+import com.springcrudengine.product_api.dto.ProductDTO;
+import com.springcrudengine.product_api.mapper.ProductMapper;
 import com.springcrudengine.product_api.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,29 +14,34 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductServiceTest {
 
     private ProductService productService;
+    private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class); // <-- Added instance of ProductMapper
 
     @BeforeEach
     void setUp() {
-        productService = new ProductService();
+        productService = new ProductService(productMapper);
+    }
+
+    private ProductDTO createDTO(String name, String desc, double price, boolean available) {
+        return new ProductDTO(null, name, desc, price, available);
     }
 
     @Test
     void testCreateProduct() {
-        Product product = new Product(null, "Laptop", "Gaming laptop", 1200.0, true);
-        Product created = productService.createProduct(product);
+        ProductDTO dto = new ProductDTO(null, "Laptop", "Gaming laptop", 1200.0, true);
+        ProductDTO created = productService.createProduct(dto);
 
         assertNotNull(created.getId());
         assertEquals("Laptop", created.getName());
         assertEquals("Gaming laptop", created.getDescription());
         assertEquals(1200.0, created.getPrice());
-        assertTrue(created.isAvailable());
+        assertTrue(created.getAvailable());
     }
 
     @Test
     void testGetProductWhenExists() {
-        Product product = new Product(null, "Mouse", "Wireless mouse", 30.0, true);
-        Product created = productService.createProduct(product);
-        Optional<Product> found = productService.getProduct(created.getId());
+        ProductDTO dto = new ProductDTO(null, "Mouse", "Wireless mouse", 30.0, true);
+        ProductDTO created = productService.createProduct(dto);
+        Optional<ProductDTO> found = productService.getProduct(created.getId());
 
         assertTrue(found.isPresent());
         assertEquals("Mouse", found.get().getName());
@@ -43,45 +50,45 @@ public class ProductServiceTest {
     @Test
     void testGetProductWhenNotExists() {
         UUID randomId = UUID.randomUUID();
-        Optional<Product> product = productService.getProduct(randomId);
+        Optional<ProductDTO> product = productService.getProduct(randomId);
 
         assertFalse(product.isPresent());
     }
 
     @Test
     void testGetAllProductsEmptyInitially() {
-        List<Product> products = productService.getAllProducts();
+        List<ProductDTO> products = productService.getAllProducts();
 
         assertTrue(products.isEmpty());
     }
 
     @Test
     void testGetAllProductsAfterAdding() {
-        productService.createProduct(new Product(null, "Monitor", "4K Monitor", 350.0, true));
-        productService.createProduct(new Product(null, "Keyboard", "Mechanical keyboard", 100.0, true));
-        List<Product> products = productService.getAllProducts();
+        productService.createProduct(createDTO("Monitor", "4K Monitor", 350.0, true));
+        productService.createProduct(createDTO("Keyboard", "Mechanical keyboard", 100.0, true));
+        List<ProductDTO> products = productService.getAllProducts();
 
         assertEquals(2, products.size());
     }
 
     @Test
     void testUpdateProductWhenExists() {
-        Product original = productService.createProduct(new Product(null, "Tablet", "Old tablet", 200.0, true));
+        ProductDTO original = productService.createProduct(createDTO("Tablet", "Old tablet", 200.0, true));
         UUID id = original.getId();
-        Product updated = new Product(null, "Tablet Pro", "New tablet version", 300.0, false);
-        Product result = productService.updateProduct(id, updated);
+        ProductDTO updated = createDTO("Tablet Pro", "New tablet version", 300.0, false);
+        ProductDTO result = productService.updateProduct(id, updated);
 
         assertEquals(id, result.getId());
         assertEquals("Tablet Pro", result.getName());
         assertEquals("New tablet version", result.getDescription());
         assertEquals(300.0, result.getPrice());
-        assertFalse(result.isAvailable());
+        assertFalse(result.getAvailable());
     }
 
     @Test
     void testUpdateProductWhenNotExists() {
         UUID nonExistentId = UUID.randomUUID();
-        Product updated = new Product(null, "Camera", "DSLR", 800.0, true);
+        ProductDTO updated = createDTO("Camera", "DSLR", 800.0, true);
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
             productService.updateProduct(nonExistentId, updated);
@@ -91,7 +98,7 @@ public class ProductServiceTest {
 
     @Test
     void testDeleteProductWhenExists() {
-        Product product = productService.createProduct(new Product(null, "Printer", "Laser printer", 150.0, true));
+        ProductDTO product = productService.createProduct(createDTO("Printer", "Laser printer", 150.0, true));
 
         assertDoesNotThrow(() -> productService.deleteProduct(product.getId()));
         assertFalse(productService.getProduct(product.getId()).isPresent());
