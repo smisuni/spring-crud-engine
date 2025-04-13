@@ -27,12 +27,21 @@ mvn clean package
 2. Navigate to the main application class located in src/main/java/.
 3. Run the main class to start the Spring Boot application.
 
-### Running Unit Tests
+### Running Unit and Integration Tests
 Use Maven to perform unit testing and code coverage using JaCoCo.
 ```shell
 mvn clean install
 ```
 Code coverage reports are available at `target/site/jacoco/index.html`.
+
+Optionally, to perform only unit tests, run
+```shell
+mvn test
+```
+To perform both integration and unit tests, run
+```shell
+mvn verify
+```
 
 ## 📘 API Documentation
 

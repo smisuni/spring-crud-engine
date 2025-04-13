@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,16 +37,21 @@ public class ProductController {
     }
 
     private void validateProductDTO(ProductDTO productDTO) {
+        List<String> validationErrors = new ArrayList<>();
         if (productDTO.getName() == null || productDTO.getName().trim().isEmpty() || productDTO.getName().length() < 3) {
-            throw new BadRequestException("Product name cannot be null, empty, or less than 3 characters");
+            validationErrors.add("Product name cannot be null, empty, or less than 3 characters");
         }
 
         if (productDTO.getPrice() == null || productDTO.getPrice() < 0) {
-            throw new BadRequestException("Price must be atleast 0");
+            validationErrors.add("Price must be atleast 0");
         }
 
         if (productDTO.getAvailable() == null) {
-            throw new BadRequestException("Available status cannot be null");
+            validationErrors.add("Available status cannot be null");
+        }
+
+        if (!validationErrors.isEmpty()) {
+            throw new BadRequestException(String.join(", ", validationErrors));
         }
     }
 

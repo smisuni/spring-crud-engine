@@ -1,6 +1,7 @@
 package com.springcrudengine.product_api.service;
 
 import com.springcrudengine.product_api.dto.ProductDTO;
+import com.springcrudengine.product_api.exceptions.ProductNotFoundException;
 import com.springcrudengine.product_api.mapper.ProductMapper;
 import com.springcrudengine.product_api.model.Product;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,7 @@ public class ProductService {
         if (productRepository.containsKey(id)) {
             productRepository.remove(id);
         } else {
-            throw new RuntimeException("Product not found");
+            throw new ProductNotFoundException("Product not found");
         }
     }
 }
