@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +25,7 @@ import java.util.UUID;
  * Provides endpoints for creating, retrieving, updating, and deleting products.
  */
 @RestController
+@Tag(name = "Product", description = "Operations related to products")
 @RequestMapping("/api/products")
 public class ProductController {
 
@@ -47,6 +50,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @Operation(summary = "Add new products", description = "Create new products inside the memory cache")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         validateProductDTO(productDTO);
         ProductDTO createdProductDTO = productService.createProduct(productDTO);
@@ -54,6 +58,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get product info", description = "Display product information from id")
     public ResponseEntity<ProductDTO> getProduct(@PathVariable UUID id) {
         return productService.getProduct(id) // Assuming this returns Optional<ProductDTO>
                 .map(ResponseEntity::ok) // Wrap it in ResponseEntity directly
@@ -61,18 +66,21 @@ public class ProductController {
     }
 
     @GetMapping
+    @Operation(summary = "List products", description = "Display all the available products")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> productDTOs = productService.getAllProducts();
         return ResponseEntity.ok(productDTOs);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete product", description = "Remove product based on its id")
     public ResponseEntity<String> deleteProduct(@PathVariable UUID id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok("Product deleted successfully");
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update product", description = "Change product information based on its id")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable UUID id, @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(updatedProductDTO);
