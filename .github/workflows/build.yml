@@ -38,11 +38,17 @@ jobs:
     - name: Run tests
       run: mvn verify
 
+    - name: List JaCoCo directory content
+      run: ls -al target/site/jacoco
+
     - name: Upload JaCoCo Report
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: jacoco-report
         path: target/site/jacoco/*
 
-  
+    - name: Download JaCoCo Report
+      uses: actions/download-artifact@v4
+      with:
+        name: jacoco-report
