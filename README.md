@@ -3,51 +3,42 @@
 This project demonstrates a Spring Boot REST API with in-memory caching for improved performance.
 
 ## 🛠️ Prerequisites
-- Java 17+
-- Maven 3.8+
-- Git
-- IntelliJ
+- **Git** (2.0+)
+- **Docker** (20.10+)
 
-## 🔧 Setup
-Download Repository and clone it to your local machine:
+## 🖥️ Running the Application Locally
+
+### Cloning the Repository
+Clone the repository to your local machine:
 ```shell
 git clone https://github.com/smisuni/spring-crud-engine.git
 cd spring-crud-engine/
 ```
 
-### Building the project
-
-Use Maven to resolve dependencies and build the project:
+### Building the Docker Image
+Run the following command to build the Docker image:
 ```shell
-mvn clean package
+docker build -t spring-crud-engine .
 ```
-### Running the project
 
-1. Open the project in IntelliJ IDEA.
-2. Navigate to the main application class located in src/main/java/.
-3. Run the main class to start the Spring Boot application.
+### Running the Docker Container
+Start the container and expose it to port 8080:
+```shell
+docker run -p 8080:8080 spring-crud-engine
+```
 
-### Running Unit and Integration Tests
-Use Maven to perform unit testing and code coverage using JaCoCo.
+### 🧪 Running Unit and Integration Tests
+To run tests inside a disposable container without requiring Java or Maven installed locally, use the following command with Docker Compose:
 ```shell
-mvn clean install
+docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 ```
-Code coverage reports are available at `target/site/jacoco/index.html`.
-
-Optionally, to perform only unit tests, run
-```shell
-mvn test
-```
-To perform both integration and unit tests, run
-```shell
-mvn verify
-```
+This will execute all tests defined in the project and generate coverage reports at `target/site/jacoco/index.html`.
 
 ## 📘 API Documentation
 
 Swagger UI is available at: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
-## 🧪 Testing with Swagger
+### 🧪 Testing with Swagger
 
 To test API endpoints:
 
