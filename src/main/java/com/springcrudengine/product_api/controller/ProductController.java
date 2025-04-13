@@ -1,6 +1,7 @@
 package com.springcrudengine.product_api.controller;
 
 import com.springcrudengine.product_api.dto.ProductDTO;
+import com.springcrudengine.product_api.exceptions.ApiSuccessResponse;
 import com.springcrudengine.product_api.exceptions.ProductNotFoundException;
 import com.springcrudengine.product_api.exceptions.BadRequestException;
 import com.springcrudengine.product_api.mapper.ProductMapper;
@@ -80,9 +81,13 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete product", description = "Remove product based on its id")
-    public ResponseEntity<String> deleteProduct(@PathVariable UUID id) {
+    public ResponseEntity<ApiSuccessResponse> deleteProduct(@PathVariable UUID id) {
         productService.deleteProduct(id);
-        return ResponseEntity.ok("Product deleted successfully");
+        ApiSuccessResponse response = new ApiSuccessResponse(
+                HttpStatus.OK.value(),
+                "Product deleted successfully"
+        );
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")

@@ -114,7 +114,8 @@ public class ProductControllerTest {
 
         mockMvc.perform(delete("/api/products/" + id))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Product deleted successfully"));
+                .andExpect(jsonPath("$.message").value("Product deleted successfully"))
+                .andExpect(jsonPath("$.status").value(200));
     }
 
     @Test
