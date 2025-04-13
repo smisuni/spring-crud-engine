@@ -1,13 +1,14 @@
-# Spring Boot REST API with In-Memory Cache
+# 🚀 Spring Boot REST API with In-Memory Cache
 
 This project demonstrates a Spring Boot REST API with in-memory caching for improved performance.
 
-## Prerequisites:
-- Java (JDK 17+)
-- Maven
+## 🛠️ Prerequisites
+- Java 17+
+- Maven 3.8+
+- Git
 - IntelliJ
 
-## Setup
+## 🔧 Setup
 Download Repository and clone it to your local machine:
 ```shell
 git clone https://github.com/smisuni/spring-crud-engine.git
@@ -33,9 +34,23 @@ mvn clean install
 ```
 Code coverage reports are available at `target/site/jacoco/index.html`.
 
-## Dependencies: 
+## 📘 API Documentation
+
+Swagger UI is available at: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+## 🧪 Testing with Swagger
+
+To test API endpoints:
+
+1. Navigate to [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) in a browser.
+2. Expand the desired endpoint.
+3. Click "Try it out" to input parameters and execute requests.
+4. View responses directly within the interface.
+
+## 📦 Key Dependencies: 
 The following dependencies are used in this project:
-- Lombok: For reducing boilerplate code.
-- spring-boot-starter-web: For building web applications with Spring Boot.
-- jacoco-maven-plugin : For code coverage using JaCoCo.
-- Mapstruct: For DTO entity mapping.
+- **Lombok**: For reducing boilerplate code.
+- **Spring Boot Starter Web**: For building web applications with Spring Boot.
+- **JaCoCo** : For code coverage.
+- **Mapstruct**: For DTO entity mapping.
+- **Swagger UI**: For generating interactive API documentation.
