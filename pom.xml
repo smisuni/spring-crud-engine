@@ -119,6 +119,12 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<excludes>
+								<exclude>com/springcrudengine/product_api/ProductApiApplication.class</exclude>
+								<exclude>com/springcrudengine/product_api/config/OpenAPIConfig.class</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
