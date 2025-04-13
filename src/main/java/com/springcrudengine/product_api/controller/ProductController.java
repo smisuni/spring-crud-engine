@@ -6,6 +6,9 @@ import com.springcrudengine.product_api.exceptions.ProductNotFoundException;
 import com.springcrudengine.product_api.exceptions.BadRequestException;
 import com.springcrudengine.product_api.mapper.ProductMapper;
 import com.springcrudengine.product_api.service.ProductService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -81,6 +84,11 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete product", description = "Remove product based on its id")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Product deleted successfully",
+            content = @Content(schema = @Schema(hidden = true))
+    )
     public ResponseEntity<ApiSuccessResponse> deleteProduct(@PathVariable UUID id) {
         productService.deleteProduct(id);
         ApiSuccessResponse response = new ApiSuccessResponse(
