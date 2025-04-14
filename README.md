@@ -1,6 +1,11 @@
-# 🚀 Spring Boot REST API with In-Memory Cache
+# 🚀 Spring Boot REST API for CRUD Operations using In-Memory Cache
 
-This project demonstrates a Spring Boot REST API with in-memory caching for improved performance.
+![Build Status](https://github.com/smisuni/spring-crud-engine/actions/workflows/build.yml/badge.svg)
+[![codecov](https://codecov.io/gh/smisuni/spring-crud-engine/branch/main/graph/badge.svg)](https://codecov.io/gh/smisuni/spring-crud-engine)
+![Java](https://img.shields.io/badge/Java-17%2B-blue.svg)
+![License](https://img.shields.io/github/license/smisuni/spring-crud-engine.svg)
+
+This project demonstrates how to build a Spring Boot REST API with essential CRUD operations.
 
 ## 🛠️ Prerequisites
 - **Git** (2.0+)
@@ -46,6 +51,17 @@ To test API endpoints:
 2. Expand the desired endpoint.
 3. Click "Try it out" to input parameters and execute requests.
 4. View responses directly within the interface.
+
+## CI/CD
+
+This project uses [GitHub Actions](https://github.com/features/actions) for continuous integration. Every push or pull request to the main branch triggers:
+
+- **Install dependencies**
+- **Build the application**
+- **Run unit and integration tests**
+- **Upload code coverage report**
+
+See `.github/workflows/build.yml` for details.
 
 ## 📦 Key Dependencies: 
 The following dependencies are used in this project:
