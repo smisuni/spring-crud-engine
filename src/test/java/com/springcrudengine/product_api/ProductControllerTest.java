@@ -174,4 +174,15 @@ public class ProductControllerTest {
                         .andExpect(jsonPath("$.status").value(400))
                         .andExpect(jsonPath("$.message").value("Available status cannot be null"));
     }
+
+    @Test
+    void testGlobalExceptionHandler_InternalServerError() throws Exception {
+        // Force an unhandled exception during service call
+        Mockito.when(productService.getAllProducts()).thenThrow(new RuntimeException("Something went wrong"));
+
+        mockMvc.perform(get("/api/products"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.message").value("Internal server error: Something went wrong"));
+    }
 }
