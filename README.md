@@ -52,7 +52,7 @@ To test API endpoints:
 3. Click "Try it out" to input parameters and execute requests.
 4. View responses directly within the interface.
 
-## CI/CD
+## ✅ CI/CD
 
 This project uses [GitHub Actions](https://github.com/features/actions) for continuous integration. Every push or pull request to the main branch triggers:
 
