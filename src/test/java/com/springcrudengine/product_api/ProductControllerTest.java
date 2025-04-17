@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.hamcrest.Matchers.containsString;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -51,8 +52,8 @@ public class ProductControllerTest {
 
     @Test
     void testCreateProduct() throws Exception {
-        ProductDTO requestDTO = new ProductDTO(null, "Mouse", "Wireless mouse", 20.0, true);
-        ProductDTO responseDTO = new ProductDTO(UUID.randomUUID(), "Mouse", "Wireless mouse", 20.0, true);
+        ProductDTO requestDTO = new ProductDTO(null, "IT-Care Mouse", "Wireless mouse", 20.0, true);
+        ProductDTO responseDTO = new ProductDTO(UUID.randomUUID(), "IT-Care Mouse", "Wireless mouse", 20.0, true);
 
         // Mock service layer behavior
         Mockito.when(productService.createProduct(any(ProductDTO.class))).thenReturn(responseDTO);
@@ -62,7 +63,7 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(responseDTO.getId().toString()))
-                .andExpect(jsonPath("$.name").value("Mouse"));
+                .andExpect(jsonPath("$.name").value("IT-Care Mouse"));
     }
 
 
@@ -121,8 +122,8 @@ public class ProductControllerTest {
     @Test
     void testUpdateProduct() throws Exception {
         UUID id = UUID.randomUUID();
-        ProductDTO requestDTO = new ProductDTO(null, "Updated", "Updated description", 75.0, false);
-        ProductDTO updatedDTO = new ProductDTO(id, "Updated", "Updated description", 75.0, false);
+        ProductDTO requestDTO = new ProductDTO(null, "IT-Care Updated", "Updated description", 75.0, false);
+        ProductDTO updatedDTO = new ProductDTO(id, "IT-Care Updated", "Updated description", 75.0, false);
 
         Mockito.when(productService.updateProduct(eq(id), any(ProductDTO.class))).thenReturn(updatedDTO);
 
@@ -131,7 +132,7 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id.toString()))
-                .andExpect(jsonPath("$.name").value("Updated"));
+                .andExpect(jsonPath("$.name").value("IT-Care Updated"));
     }
 
     @Test
@@ -144,35 +145,35 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productDTO)))
                         .andExpect(status().isBadRequest())
                         .andExpect(jsonPath("$.status").value(400))
-                        .andExpect(jsonPath("$.message").value("Product name cannot be null, empty, or less than 3 characters"));
+                        .andExpect(jsonPath("$.message",containsString("name")));
 
     }
 
     @Test
     void testValidateProductDTO_InvalidPrice() throws Exception {
         // Expecting 400 Bad Request with a message about invalid price
-        ProductDTO productDTO = new ProductDTO(null, "Laptop", "A powerful laptop", -150.0, true);
+        ProductDTO productDTO = new ProductDTO(null, "IT-Care Laptop", "A powerful laptop", -150.0, true);
 
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDTO)))
                         .andExpect(status().isBadRequest())
                         .andExpect(jsonPath("$.status").value(400))
-                        .andExpect(jsonPath("$.message").value("Price must be atleast 0"));
+                        .andExpect(jsonPath("$.message").value("price: Price must be at least 0"));
     }
 
     @Test
     void testValidateProductDTO_InvalidAvailability() throws Exception {
 
         // Expecting 400 Bad Request with a message about null availability
-        ProductDTO productDTO = new ProductDTO(null, "Smartphone", "Latest model smartphone", 799.99, null);
+        ProductDTO productDTO = new ProductDTO(null, "IT-Care Smartphone", "Latest model smartphone", 799.99, null);
 
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDTO)))
                         .andExpect(status().isBadRequest())
                         .andExpect(jsonPath("$.status").value(400))
-                        .andExpect(jsonPath("$.message").value("Available status cannot be null"));
+                        .andExpect(jsonPath("$.message").value("available: Availability status must be provided"));
     }
 
     @Test

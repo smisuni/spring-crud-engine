@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import jakarta.validation.Valid;
 
 /**
  * REST controller for managing products.
@@ -40,29 +40,9 @@ public class ProductController {
         this.productService = productService;
     }
 
-    private void validateProductDTO(ProductDTO productDTO) {
-        List<String> validationErrors = new ArrayList<>();
-        if (productDTO.getName() == null || productDTO.getName().trim().isEmpty() || productDTO.getName().length() < 3) {
-            validationErrors.add("Product name cannot be null, empty, or less than 3 characters");
-        }
-
-        if (productDTO.getPrice() == null || productDTO.getPrice() < 0) {
-            validationErrors.add("Price must be atleast 0");
-        }
-
-        if (productDTO.getAvailable() == null) {
-            validationErrors.add("Available status cannot be null");
-        }
-
-        if (!validationErrors.isEmpty()) {
-            throw new BadRequestException(String.join(", ", validationErrors));
-        }
-    }
-
     @PostMapping
     @Operation(summary = "Add new products", description = "Create new products inside the memory cache")
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
-        validateProductDTO(productDTO);
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         ProductDTO createdProductDTO = productService.createProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDTO);
     }
@@ -100,7 +80,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update product", description = "Change product information based on its id")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable UUID id, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable UUID id, @Valid @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(updatedProductDTO);
     }

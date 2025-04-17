@@ -31,7 +31,7 @@ public class ProductControllerIntegrationTest {
 
     @Test
     public void testCreateAndGetProduct() {
-        ProductDTO request = createValidProduct("TestPhone");
+        ProductDTO request = createValidProduct("IT-Care TestPhone");
 
         ResponseEntity<ProductDTO> createResponse = restTemplate.postForEntity(baseUrl(), request, ProductDTO.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -41,17 +41,17 @@ public class ProductControllerIntegrationTest {
 
         ResponseEntity<ProductDTO> getResponse = restTemplate.getForEntity(baseUrl() + "/" + created.getId(), ProductDTO.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(getResponse.getBody().getName()).isEqualTo("TestPhone");
+        assertThat(getResponse.getBody().getName()).isEqualTo("IT-Care TestPhone");
     }
 
     @Test
     public void testUpdateProduct() {
-        ProductDTO request = createValidProduct("OldName");
+        ProductDTO request = createValidProduct("IT-Care OldName");
 
         ProductDTO created = restTemplate.postForEntity(baseUrl(), request, ProductDTO.class).getBody();
         assertThat(created).isNotNull();
 
-        created.setName("NewName");
+        created.setName("IT-Care NewName");
         created.setPrice(123.45);
 
         HttpHeaders headers = new HttpHeaders();
@@ -62,13 +62,13 @@ public class ProductControllerIntegrationTest {
         ResponseEntity<ProductDTO> response = restTemplate.exchange(baseUrl() + "/" + created.getId(), HttpMethod.PUT, entity, ProductDTO.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getName()).isEqualTo("NewName");
+        assertThat(response.getBody().getName()).isEqualTo("IT-Care NewName");
         assertThat(response.getBody().getPrice()).isEqualTo(123.45);
     }
 
     @Test
     public void testDeleteProduct() {
-        ProductDTO created = restTemplate.postForEntity(baseUrl(), createValidProduct("ToDelete"), ProductDTO.class).getBody();
+        ProductDTO created = restTemplate.postForEntity(baseUrl(), createValidProduct("IT-Care ToDelete"), ProductDTO.class).getBody();
 
         restTemplate.delete(baseUrl() + "/" + created.getId());
 
@@ -82,7 +82,13 @@ public class ProductControllerIntegrationTest {
 
         ResponseEntity<String> response = restTemplate.postForEntity(baseUrl(), invalid, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody()).contains("Product name cannot be null", "Price must be atleast 0", "Available status cannot be null");
+        String responseBody = response.getBody();
+        assertThat(responseBody).containsAnyOf(
+                "name: Product name must contain 'IT-Care'",
+                "name: Name must have at least 3 characters"
+        );
+        assertThat(responseBody).contains("price: Price must be at least 0");
+        assertThat(responseBody).contains("available: Availability status must be provided");
     }
 
     @Test
@@ -94,8 +100,8 @@ public class ProductControllerIntegrationTest {
 
     @Test
     public void testGetAllProducts() {
-        restTemplate.postForEntity(baseUrl(), createValidProduct("Product1"), ProductDTO.class);
-        restTemplate.postForEntity(baseUrl(), createValidProduct("Product2"), ProductDTO.class);
+        restTemplate.postForEntity(baseUrl(), createValidProduct("IT-Care Product1"), ProductDTO.class);
+        restTemplate.postForEntity(baseUrl(), createValidProduct("IT-Care Product2"), ProductDTO.class);
 
         ResponseEntity<ProductDTO[]> response = restTemplate.getForEntity(baseUrl(), ProductDTO[].class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

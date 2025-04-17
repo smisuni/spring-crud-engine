@@ -70,3 +70,4 @@ The following dependencies are used in this project:
 - **JaCoCo** : For code coverage.
 - **Mapstruct**: For DTO entity mapping.
 - **Swagger UI**: For generating interactive API documentation.
+- **Jakarta Validation**: For input validation and enforcing constraints on Java objects.

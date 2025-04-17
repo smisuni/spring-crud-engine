@@ -40,9 +40,15 @@ public class GlobalExceptionHandler {
             errors.put(field, message);
         });
 
+        String errorMessage = errors.entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                .reduce((msg1, msg2) -> msg1 + "; " + msg2)
+                .orElse("Validation failed");
+
         ApiErrorResponse response = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Validation failed"
+                errorMessage
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
