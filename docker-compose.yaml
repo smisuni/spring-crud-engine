@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  spring-crud-engine:
+    image: spring-crud-engine:latest
+    container_name: spring-crud-engine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    restart: no

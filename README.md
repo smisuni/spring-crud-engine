@@ -33,9 +33,18 @@ To skip tests during the build, use:
 docker build --build-arg SKIP_TESTS=true -t spring-crud-engine .
 ```
 ### Running the Docker Container
-Run the container and expose port 8080:
+
+**Option 1: Using `docker run`**
+
+Run the container manually and expose port 8080:
 ```shell
 docker run -p 8080:8080 -v /data:/app/data spring-crud-engine
+```
+**Option 2: Using `docker compose`**
+
+Start the application via docker compose:
+```shell
+docker compose up
 ```
 **Note**: 
 - When running via Docker, the database is persisted in a mounted volume `/data` on host. This ensures that data is not lost when the container stops or restarts.
