@@ -10,9 +10,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "test-actions" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "test-actions" ]
 
 jobs:
   build:
@@ -35,8 +35,8 @@ jobs:
     - name: Build the application
       run: mvn clean install -DskipTests=true
 
-    - name: Run tests
-      run: mvn verify
+    - name: Run tests with 'test' profile
+      run: mvn verify -Ptest
 
     - name: Upload JaCoCo Report
       if: always()

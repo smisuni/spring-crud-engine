@@ -10,16 +10,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
 public class ProductServiceTest {
 
+    @Autowired
     private ProductService productService;
-    private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class); // <-- Added instance of ProductMapper
+
+    /*private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class); // <-- Added instance of ProductMapper
 
     @BeforeEach
     void setUp() {
         productService = new ProductService(productMapper);
-    }
+    }*/
 
     private ProductDTO createDTO(String name, String desc, double price, boolean available) {
         return new ProductDTO(null, name, desc, price, available);

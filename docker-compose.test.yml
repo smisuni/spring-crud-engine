@@ -6,4 +6,6 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: mvn clean verify
+    command: mvn clean verify -Ptest
+    environment:
+      - SPRING_PROFILES_ACTIVE=test

@@ -41,7 +41,7 @@ public class ProductController {
     }
 
     @PostMapping
-    @Operation(summary = "Add new products", description = "Create new products inside the memory cache")
+    @Operation(summary = "Add new products", description = "Create new products inside the database")
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         ProductDTO createdProductDTO = productService.createProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDTO);

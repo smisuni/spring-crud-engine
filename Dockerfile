@@ -9,6 +9,7 @@ RUN mvn clean install -DskipTests
 # Stage 2: Run
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
+RUN mkdir -p /app/data
 COPY --from=build /app/target/product-app.jar .
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "product-app.jar"]
