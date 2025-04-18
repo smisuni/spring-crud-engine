@@ -11,8 +11,6 @@ This project demonstrates how to build a Spring Boot REST API with essential CRU
 - **Git** (2.0+)
 - **Docker** (20.10+)
 
----
-
 ## 🖥️ Running the Application Locally
 
 ### Cloning the Repository
@@ -23,13 +21,19 @@ cd spring-crud-engine/
 ```
 
 ### Building the Docker Image
-Run the following command to build the Docker image:
+The Dockerfile is used to build the application image and run tests inside a container.
+More details on running tests are provided in the section [Running Unit and Integration Tests](#test-section).
+
+To build and test the full application, use:
 ```shell
 docker build -t spring-crud-engine .
 ```
-
+To skip tests during the build, use:
+```shell
+docker build --build-arg SKIP_TESTS=true -t spring-crud-engine .
+```
 ### Running the Docker Container
-Start the container and expose it to port 8080:
+Run the container and expose port 8080:
 ```shell
 docker run -p 8080:8080 -v /data:/app/data spring-crud-engine
 ```
@@ -37,15 +41,15 @@ docker run -p 8080:8080 -v /data:/app/data spring-crud-engine
 - When running via Docker, the database is persisted in a mounted volume `/data` on host. This ensures that data is not lost when the container stops or restarts.
 - For testing purposes, the application uses an in-memory H2 database, meaning no data is persisted between test runs.
 
+<a id="test-section"></a>
 ### 🧪 Running Unit and Integration Tests
 A dedicated application profile named `test` has been created to run with an in-memory H2 database for fast and isolated testing.
-To run tests inside a disposable container without requiring Java or Maven installed locally, use the following command with Docker Compose:
+To run tests inside a disposable container, without requiring Java or Maven installed locally, and **without building the full application jar**, run
 ```shell
-docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+docker build --target test -t spring-crud-engine:test .
 ```
-This will execute all tests defined in the project and generate coverage reports at `target/site/jacoco/index.html`.
-
----
+The execution of tests generates coverage reports at `target/site/jacoco/index.html` inside the container.
+To access the coverage report locally, either run `mvn clean verify -Ptest` outside Docker, or manually copy the `target/` folder from the container after building.
 
 ## 🗄️ Database
 
@@ -61,8 +65,6 @@ This will execute all tests defined in the project and generate coverage reports
 
 These credentials can be modified inside `application.properties`.
 
----
-
 ## 📘 API Documentation
 
 Swagger UI is available at: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
@@ -76,8 +78,6 @@ To test API endpoints:
 3. Click "Try it out" to input parameters and execute requests.
 4. View responses directly within the interface.
 
----
-
 ## ✅ CI/CD
 
 This project uses [GitHub Actions](https://github.com/features/actions) for continuous integration. Every push or pull request to the main branch triggers:
@@ -88,8 +88,6 @@ This project uses [GitHub Actions](https://github.com/features/actions) for cont
 - **Upload code coverage report**
 
 See `.github/workflows/build.yml` for details.
-
----
 
 ## 📦 Key Dependencies: 
 The following dependencies are used in this project:
