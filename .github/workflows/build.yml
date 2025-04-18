@@ -10,9 +10,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "test-actions" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "test-actions" ]
 
 jobs:
   build:
@@ -21,33 +21,54 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
 
-    - name: Install dependencies
-      run: mvn dependency:resolve
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-    - name: Build the application
-      run: mvn clean install -DskipTests=true
+    - name: Build Docker image for test stage
+      run: |
+        docker build --target test -t spring-crud-engine:test .
 
-    - name: Run tests with 'test' profile
-      run: mvn verify -Ptest
+    - name: Create volume for jacoco report
+      run: |
+        docker volume create jacoco-data
 
+    - name: Run tests and generate JaCoCo report
+      run: |
+        docker run --rm \
+          -v jacoco-data:/app/target/site/jacoco \
+          spring-crud-engine:test
+
+    - name: Copy JaCoCo report from volume
+      run: |
+        docker run --rm \
+          -v jacoco-data:/jacoco-data \
+          -v ${{ github.workspace }}:/workspace \
+          alpine sh -c "cp -r /jacoco-data /workspace/jacoco"
+          
     - name: Upload JaCoCo Report
-      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: jacoco-report
-        path: target/site/jacoco/*
+        path: jacoco/*
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
-        files: target/site/jacoco/jacoco.xml
+        files: jacoco/jacoco.xml
         flags: unittests
         fail_ci_if_error: true
+
+    - name: Build final production Docker image
+      run: |
+        docker build --target runtime -t spring-crud-engine:latest .
+
+    - name: Save Docker image as archive
+      run: |
+        docker save spring-crud-engine:latest | gzip > spring-crud-engine.tar.gz
+
+    - name: Upload Docker image
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-image
+        path: spring-crud-engine.tar.gz
