@@ -29,22 +29,11 @@ jobs:
       run: |
         docker build --target test -t spring-crud-engine:test .
 
-    - name: Create volume for jacoco report
+    - name: Extract JaCoCo report from test image
       run: |
-        docker volume create jacoco-data
-
-    - name: Run tests and generate JaCoCo report
-      run: |
-        docker run --rm \
-          -v jacoco-data:/app/target/site/jacoco \
-          spring-crud-engine:test
-
-    - name: Copy JaCoCo report from volume
-      run: |
-        docker run --rm \
-          -v jacoco-data:/jacoco-data \
-          -v ${{ github.workspace }}:/workspace \
-          alpine sh -c "cp -r /jacoco-data /workspace/jacoco"
+        docker create --name extract-jacoco spring-crud-engine:test
+        docker cp extract-jacoco:/app/target/site/jacoco ./jacoco
+        docker rm extract-jacoco
           
     - name: Upload JaCoCo Report
       uses: actions/upload-artifact@v4
