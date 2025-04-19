@@ -89,12 +89,14 @@ To test API endpoints:
 
 ## ✅ CI/CD
 
-This project uses [GitHub Actions](https://github.com/features/actions) for continuous integration. Every push or pull request to the main branch triggers:
+This project uses [GitHub Actions](https://github.com/features/actions) for continuous integration and Docker for building and packaging the application. Every push or pull request to the main branch triggers the following:
 
-- **Install dependencies**
-- **Build the application**
-- **Run unit and integration tests**
-- **Upload code coverage report**
+- **Build** Docker images for testing and running the application
+- **Run** unit and integration tests inside Docker
+- **Extract and upload** JaCoCo code coverage reports
+- **Upload** code coverage report to Codecov
+- **Build** final Docker runtime image
+- **Save and upload** the Docker image archive for deployments
 
 See `.github/workflows/build.yml` for details.
 
