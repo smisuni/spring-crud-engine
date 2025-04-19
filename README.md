@@ -21,11 +21,11 @@ This project demonstrates how to build a Spring Boot REST API with essential CRU
 - [CI/CD](#-cicd)
 - [Key Dependencies](#-key-dependencies)
 
-## 🛠️ Prerequisites
+## 🛠 Prerequisites
 - **Git** (2.0+)
 - **Docker** (20.10+)
 
-## 🖥️ Running the Application Locally
+## 🖥 Running the Application Locally
 
 ### Cloning the Repository
 Clone the repository to your local machine:
@@ -94,7 +94,7 @@ To use the image:
     ```
 The H2 database will be created inside the `data/` directory after the application starts.
 
-## 🗄️ Database
+## 🗄 Database
 
 - **Type**: H2 (File based, persistent)
 - **Persistence**: Data is saved locally and remains even after the app stops and restarts.
