@@ -7,6 +7,20 @@
 
 This project demonstrates how to build a Spring Boot REST API with essential CRUD operations.
 
+## 📚 Table of Contents
+- [Prerequisites](#-prerequisites)
+- [Running the Application Locally](#-running-the-application-locally)
+  - [Cloning the Repository](#cloning-the-repository)
+  - [Building the Docker Image](#building-the-docker-image)
+  - [Running the Docker Container](#running-the-docker-container)
+- [Running Unit and Integration Tests](#-running-unit-and-integration-tests)
+- [Using the Prebuilt Docker Image](#using-the-prebuilt-docker-image)
+- [Database](#-database)
+- [API Documentation](#-api-documentation)
+  - [Testing with Swagger](#-testing-with-swagger)
+- [CI/CD](#-cicd)
+- [Key Dependencies](#-key-dependencies)
+
 ## 🛠️ Prerequisites
 - **Git** (2.0+)
 - **Docker** (20.10+)
@@ -22,7 +36,7 @@ cd spring-crud-engine/
 
 ### Building the Docker Image
 The Dockerfile is used to build the application image and run tests inside a container.
-More details on running tests are provided in the section [Running Unit and Integration Tests](#test-section).
+More details on running tests are provided in the section [Running Unit and Integration Tests](#-running-unit-and-integration-tests).
 
 To build and test the full application, use:
 ```shell
@@ -32,8 +46,8 @@ To skip tests during the build, use:
 ```shell
 docker build --build-arg SKIP_TESTS=true -t spring-crud-engine .
 ```
-### Running the Docker Container
 
+### Running the Docker Container
 **Option 1: Using `docker run`**
 
 Run the container manually and expose port 8080:
@@ -50,15 +64,35 @@ docker compose up
 - When running via Docker, the database is persisted in a mounted volume `/data` on host. This ensures that data is not lost when the container stops or restarts.
 - For testing purposes, the application uses an in-memory H2 database, meaning no data is persisted between test runs.
 
-<a id="test-section"></a>
 ### 🧪 Running Unit and Integration Tests
 A dedicated application profile named `test` has been created to run with an in-memory H2 database for fast and isolated testing.
 To run tests inside a disposable container, without requiring Java or Maven installed locally, and **without building the full application jar**, run
+
 ```shell
 docker build --target test -t spring-crud-engine:test .
 ```
 The execution of tests generates coverage reports at `target/site/jacoco/index.html` inside the container.
 To access the coverage report locally, either run `mvn clean verify -Ptest` outside Docker, or manually copy the `target/` folder from the container after building.
+
+### Using the Prebuilt Docker Image
+A prebuilt Docker image is available as an artifact in the GitHub Actions workflow.
+
+To use the image:
+
+1. **Download** the Docker image artifact:
+   - Navigate to the **[Actions](https://github.com/smisuni/spring-crud-engine/actions)** tab of this repository.
+   - Select the latest successful workflow run.
+   - Download the `docker-image` artifact.
+2. **Extract** the downloaded `docker-image.zip` data.
+3. **Load** the extracted Docker image `spring-crud-engine.tar.gz` into local Docker.
+    ```shell
+    docker load < spring-crud-engine.tar.gz
+    ```
+4. **Run** the Docker container:
+    ```shell
+    docker run -p 8080:8080 -v $(pwd)/data:/app/data spring-crud-engine
+    ```
+The H2 database will be created inside the `data/` directory after the application starts.
 
 ## 🗄️ Database
 
@@ -100,7 +134,7 @@ This project uses [GitHub Actions](https://github.com/features/actions) for cont
 
 See `.github/workflows/build.yml` for details.
 
-## 📦 Key Dependencies: 
+## 📦 Key Dependencies:
 The following dependencies are used in this project:
 - **Lombok**: For reducing boilerplate code.
 - **Spring Boot Starter Web**: For building web applications with Spring Boot.
