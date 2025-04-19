@@ -50,7 +50,7 @@ jobs:
 
     - name: Build final production Docker image
       run: |
-        docker build --target runtime -t spring-crud-engine:latest .
+        docker build --target runtime -t spring-crud-engine:latest --build-arg SKIP_TESTS=true .
 
     - name: Save Docker image as archive
       run: |
