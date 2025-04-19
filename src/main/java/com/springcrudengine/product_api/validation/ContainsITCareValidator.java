@@ -7,7 +7,7 @@ public class ContainsITCareValidator implements ConstraintValidator<ContainsITCa
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
-            return true; // Let @NotBlank or @NotNull handle nulls
+            return true;
         }
         return value.contains("IT-Care");
     }

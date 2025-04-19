@@ -1,11 +1,8 @@
 package com.springcrudengine.product_api;
 
 import com.springcrudengine.product_api.dto.ProductDTO;
-import com.springcrudengine.product_api.mapper.ProductMapper;
 import com.springcrudengine.product_api.service.ProductService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,13 +19,6 @@ public class ProductServiceTest {
 
     @Autowired
     private ProductService productService;
-
-    /*private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class); // <-- Added instance of ProductMapper
-
-    @BeforeEach
-    void setUp() {
-        productService = new ProductService(productMapper);
-    }*/
 
     private ProductDTO createDTO(String name, String desc, double price, boolean available) {
         return new ProductDTO(null, name, desc, price, available);

@@ -7,7 +7,6 @@ import com.springcrudengine.product_api.model.Product;
 import com.springcrudengine.product_api.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service layer for handling business logic related to products.
@@ -16,7 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class ProductService {
 
-    //private final Map<UUID, Product> productRepository = new ConcurrentHashMap<>();
     private final ProductMapper mapper;
     private final ProductRepository productRepository;
 

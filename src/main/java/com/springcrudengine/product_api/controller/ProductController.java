@@ -3,7 +3,6 @@ package com.springcrudengine.product_api.controller;
 import com.springcrudengine.product_api.dto.ProductDTO;
 import com.springcrudengine.product_api.exceptions.ApiSuccessResponse;
 import com.springcrudengine.product_api.exceptions.ProductNotFoundException;
-import com.springcrudengine.product_api.exceptions.BadRequestException;
 import com.springcrudengine.product_api.mapper.ProductMapper;
 import com.springcrudengine.product_api.service.ProductService;
 import io.swagger.v3.oas.annotations.media.Content;

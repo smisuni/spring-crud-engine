@@ -164,7 +164,6 @@ public class ProductControllerTest {
 
     @Test
     void testValidateProductDTO_InvalidAvailability() throws Exception {
-
         // Expecting 400 Bad Request with a message about null availability
         ProductDTO productDTO = new ProductDTO(null, "IT-Care Smartphone", "Latest model smartphone", 799.99, null);
 
